@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.messages.views import SuccessMessageMixin
 from app.models import Movies
 
 
@@ -15,3 +16,8 @@ class MovieList(ListView):
 class MovieDetail(DetailView):
     model = Movies
     context_object_name = 'movie_details'
+
+class MovieAdd(SuccessMessageMixin, CreateView):
+    model = Movies
+    fields = ['title']
+    success_message = '%(title)s successfully created!'

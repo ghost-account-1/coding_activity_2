@@ -1,0 +1,50 @@
+[
+  {
+    "model": "app.movies",
+    "pk": 1,
+    "fields": {
+      "title": "The Avengers",
+      "is_active": "False"
+    }
+  },
+  {
+    "model": "app.movies",
+    "pk": 2,
+    "fields": {
+      "title": "Schindler's List",
+      "is_active": "True"
+    }
+  },
+  {
+    "model": "app.movies",
+    "pk": 3,
+    "fields": {
+      "title": "The Shawshank Redemption",
+      "is_active": "True"
+    }
+  },
+  {
+    "model": "app.movies",
+    "pk": 4,
+    "fields": {
+      "title": "Blue Valentine",
+      "is_active": "True"
+    }
+  },
+  {
+    "model": "app.movies",
+    "pk": 5,
+    "fields": {
+      "title": "Pay it forward",
+      "is_active": "True"
+    }
+  },
+  {
+    "model": "app.movies",
+    "pk": 6,
+    "fields": {
+      "title": "Zootopia",
+      "is_active": "True"
+    }
+  }
+]

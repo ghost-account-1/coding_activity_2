@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from app.models import Movies
 
@@ -21,3 +21,9 @@ class MovieAdd(SuccessMessageMixin, CreateView):
     model = Movies
     fields = ['title']
     success_message = '%(title)s successfully created!'
+
+class MovieEdit(SuccessMessageMixin, UpdateView):
+    model = Movies
+    fields = ['title']
+    template_name_suffix = '_update_form'
+    success_message = '%(title)s successfully edited!'

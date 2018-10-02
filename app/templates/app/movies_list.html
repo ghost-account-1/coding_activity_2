@@ -4,6 +4,7 @@
 {% for movie in object_list %}
     <li>{{ movie.title }} ||
         <a class="btn btn-primary" id="view" href="{% url 'detail' movie.id %}" role="button">View</a>
+        <a class="btn btn-primary" id="edit" href="{% url 'edit' movie.id %}" role="button">Edit</a>
     </li>
 {% empty %}
     <li>No movies yet.</li>

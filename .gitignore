@@ -1,3 +1,5 @@
 */migrations
 *.pyc
 *.sw?
+db.sqlite3
+

@@ -13,3 +13,8 @@ class Movies(models.Model):
 
     def get_absolute_url(self):
             return reverse('detail', kwargs={'pk': self.pk})
+
+    def soft_delete(self):
+        self.is_active = False
+        self.save()
+

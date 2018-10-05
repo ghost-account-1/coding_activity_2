@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
 <ul>
-    <li>{{ movie_details.title }}</li>
+    <li><h3>{{ movie_details.title }}</h3></li>
 </ul>
 {% endblock %}

@@ -1,101 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-<a class="btn btn-primary" id="add" href="{% url 'add' %}" role="button">add</a>
+<a class="btn btn-primary col-sm-6" id="add" href="{% url 'add' %}" role="button">add</a>
 <ul>
 {% for movie in object_list %}
-<li>{{ movie.title }} || <div id="{{ movie.id }}"><span>{{ movie.like }}</span><div>
-            <button type="button" class="btn btn-primary js-like-button" data-url="{% url 'like' movie.id %}" data-movie-id="{{ movie.id }}">Like</button>
+<li>{{ movie.title }} <div id="{{ movie.id }}"><span>{{ movie.like }}</span><div>
+        <button type="button" class="btn btn-primary js-like-button" data-url="{% url 'like' movie.id %}" data-movie-id="{{ movie.id }}">Like</button>
         <a class="btn btn-primary" id="view" href="{% url 'detail' movie.id %}" role="button">View</a>
         <a class="btn btn-primary" id="edit" href="{% url 'edit' movie.id %}" role="button">Edit</a>
         <button type="button" class="btn btn-warning js-soft-delete" data-url="{% url 'delete' movie.id %}">Delete</button>
     </li>
-
     <!-- Modal -->
-    <form method="post" id="js-modal-form" action="">{% csrf_token %}
-    <div class="modal" id="js-delete-confirmation" tabindex="-1" role="dialog" aria-labelledby="js-delete-confirmation-label" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="js-delete-confirmation-label">Confirmation</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-                <p>Are you sure you would like to delete this?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" id='no' class="btn btn-secondary" data-dismiss="modal">No</button>
-            <button type="submit" id='yes' class="btn btn-primary" value="Confirm">Yes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    </form>
-    <div id="test">
-    </div>
+    {% include 'app/modal.html' %}
 {% empty %}
     <li>No movies yet.</li>
 {% endfor %}
-
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
+    <!-- Pagination -->
+    {% include 'app/pagination.html' %}
 </ul>
-
-
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        $(".js-soft-delete").click(function () {
-            var btn = $(this);
-            var token = '{{csrf_token}}';
-            //open modal
-            $("#js-delete-confirmation").modal("show");
-            //update action
-            $('#js-modal-form').attr('action', btn.attr("data-url"));
-            return false
-        });
-
-        $(".js-like-button").click(function () {
-            var btn = $(this);
-            var token = '{{csrf_token}}';
-            var l_url = btn.attr("data-url");
-            var movie_id = btn.attr("data-movie-id");
-            var l_id = "#"+movie_id+" span";
-            $.ajax({
-                headers: { "X-CSRFToken": token },
-                url: l_url,
-                type: 'post',
-                dataType: 'json',
-                success: function (data) {
-                    //update like
-                    $(l_id).text(data['likes']);
-                }
-            });
-            return false
-        });
-    </script>
+    {% include 'custom_javascript.js' %}
 {% endblock %}

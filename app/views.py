@@ -1,4 +1,5 @@
-from datetime import datetime
+import pytz
+from django.utils import timezone
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
@@ -6,6 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.messages.views import SuccessMessageMixin
 from app.models import Movies
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -27,25 +29,28 @@ class MovieList(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        self.request.session.setdefault('history', []).append(datetime.today().strftime('%b %d %Y, %H:%M:%S'))
+        #set timezone to Asia/Manila
+        timezone.activate(pytz.timezone("Asia/Manila"))
+        self.request.session.setdefault('history', []).append(timezone.localtime(timezone.now()).strftime('%b %d %Y, %H:%M:%S'))
         self.request.session.modified = True
         history = self.request.session['history']
         if len(history) > 1:
-            messages.add_message(self.request, messages.INFO, 'Welcome back! You’ve visited this page last '+ max(history))
+            messages.add_message(self.request, messages.INFO, 'Welcome back! You’ve visited this page last '+ history[-2])
         else:
             messages.add_message(self.request, messages.INFO, 'Welcome to our site!')
+        print(history)
         return self.model.objects.all().filter(is_active=True)
 
 class MovieDetail(DetailView):
     model = Movies
     context_object_name = 'movie_details'
 
-class MovieAdd(SuccessMessageMixin, CreateView):
+class MovieAdd(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Movies
     fields = ['title']
     success_message = '%(title)s successfully created!'
 
-class MovieEdit(SuccessMessageMixin, UpdateView):
+class MovieEdit(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Movies
     fields = ['title']
     template_name_suffix = '_update_form'
@@ -56,7 +61,7 @@ class MovieLike(AjaxableResponseMixin, UpdateView):
     fields = ['like']
     template_name_suffix = '_like_form'
 
-class MovieDelete(DeleteView):
+class MovieDelete(LoginRequiredMixin, DeleteView):
     model = Movies
     success_url = reverse_lazy('list')
 
